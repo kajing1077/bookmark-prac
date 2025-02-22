@@ -1,13 +1,11 @@
-'use client';
+"use client";
 
 import { useTransition } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function SearchBar({
-                                    defaultValue = '',
-                                  }) {
-  const {replace} = useRouter();
+export default function SearchBar({ defaultValue = "" }) {
+  const { replace } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -15,9 +13,9 @@ export default function SearchBar({
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set('search', term);
+      params.set("search", term);
     } else {
-      params.delete('search');
+      params.delete("search");
     }
 
     startTransition(() => {
@@ -60,7 +58,7 @@ export default function SearchBar({
       />
       {isPending && (
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
-          <div className="animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent"/>
+          <div className="animate-spin h-5 w-5 border-2 border-blue-500 rounded-full border-t-transparent" />
         </div>
       )}
     </div>

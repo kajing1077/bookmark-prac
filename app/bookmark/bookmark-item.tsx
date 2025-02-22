@@ -1,10 +1,11 @@
-'use client'
+"use client";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem, DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";
 import { EditBookmarkDialog } from "@/app/bookmark/bookmark-edit";
@@ -14,28 +15,29 @@ import Image from "next/image";
 import { Bookmark } from "@prisma/client";
 
 interface BookmarkItemProps {
-  bookmark: Bookmark;  // Prisma 타입 사용
+  bookmark: Bookmark; // Prisma 타입 사용
   onDeleteAction: () => Promise<void>;
   onEditAction: (newData: { title: string; url: string }) => void;
   onDropdownChangeAction: (open: boolean) => void;
   isSelected: boolean;
 }
 
-
 export default function BookmarkItem({
-                                       bookmark,
-                                       onDeleteAction,
-                                       onEditAction,
-                                       onDropdownChangeAction,
-                                       isSelected
-                                     }: BookmarkItemProps) {
+  bookmark,
+  onDeleteAction,
+  onEditAction,
+  onDropdownChangeAction,
+  isSelected,
+}: BookmarkItemProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   return (
-    <div className={`
+    <div
+      className={`
       relative flex flex-col p-4 hover:bg-gray-200 group
-      ${isSelected ? 'bg-gray-200' : ''}
-    `}>
+      ${isSelected ? "bg-gray-200" : ""}
+    `}
+    >
       <Link
         href={bookmark.url}
         target="_blank"
@@ -58,7 +60,7 @@ export default function BookmarkItem({
                 width={40}
                 height={40}
                 onError={(e) => {
-                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.style.display = "none";
                 }}
               />
             ) : (
@@ -80,16 +82,15 @@ export default function BookmarkItem({
 
         <DropdownMenu onOpenChange={onDropdownChangeAction}>
           <DropdownMenuTrigger asChild>
-            <button
-              className="p-2 cursor-pointer hover:bg-gray-300 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-              <EllipsisVertical size={16}/>
+            <button className="p-2 cursor-pointer hover:bg-gray-300 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+              <EllipsisVertical size={16} />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem onSelect={() => setIsEditDialogOpen(true)}>
               Edit...
             </DropdownMenuItem>
-            <DropdownMenuSeparator/>
+            <DropdownMenuSeparator />
             <DropdownMenuItem>
               <button
                 onClick={async () => {

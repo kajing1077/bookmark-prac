@@ -1,46 +1,3 @@
-// 'use server'
-//
-// import { getToken } from "next-auth/jwt";
-//
-// export async function POST(request: Request) {
-//   console.log("=== Naver Disconnect API Called ===");
-//
-//   try {
-//     const token = await getToken({
-//       req: request,
-//       secret: process.env.AUTH_SECRET
-//     });
-//
-//     console.log("JWT token:", token);
-//     const accessToken = token?.accessToken as string;
-//
-//     if (!accessToken) {
-//       console.log("No access token found in JWT");
-//       return new Response('No token found', { status: 404 });
-//     }
-//
-//     // access token URL 인코딩
-//     const encodedToken = encodeURIComponent(accessToken);
-//     console.log('encoded', encodedToken)
-//     const disconnectUrl = `https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=${process.env.AUTH_NAVER_ID}&client_secret=${process.env.AUTH_NAVER_SECRET}&access_token=${encodedToken}&service_provider=NAVER`;
-//
-//     console.log("Request URL:", disconnectUrl);
-//
-//     const response = await fetch(disconnectUrl);
-//     const data = await response.json();
-//
-//     console.log("Naver API Response:", data);
-//
-//     return new Response(JSON.stringify(data), {
-//       status: 200,
-//       headers: { 'Content-Type': 'application/json' }
-//     });
-//
-//   } catch (error) {
-//     console.error("Error in naver-disconnect:", error);
-//     return new Response('Internal Server Error', { status: 500 });
-//   }
-// }
 import { getToken } from "next-auth/jwt";
 
 export async function POST(request: Request) {
@@ -49,34 +6,37 @@ export async function POST(request: Request) {
   try {
     const token = await getToken({
       req: request,
-      secret: process.env.AUTH_SECRET
+      secret: process.env.AUTH_SECRET,
     });
 
     const accessToken = token?.accessToken as string;
     if (!accessToken) {
       console.log("No access token found");
-      return new Response('No token found', { status: 404 });
+      return new Response("No token found", { status: 404 });
     }
 
     // 1. 먼저 토큰 유효성 검사
     console.log("Validating token...");
-    const validateResponse = await fetch('https://openapi.naver.com/v1/nid/me', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
+    const validateResponse = await fetch(
+      "https://openapi.naver.com/v1/nid/me",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       }
-    });
+    );
 
     if (!validateResponse.ok) {
       console.log("Token validation failed:", await validateResponse.text());
-      return new Response('Invalid token', { status: 401 });
+      return new Response("Invalid token", { status: 401 });
     }
 
     // 2. 토큰이 유효하면 삭제 요청
     console.log("Token is valid, proceeding with disconnection...");
     const encodedToken = encodeURIComponent(accessToken)
-      .replace(/\+/g, '%2B')
-      .replace(/\//g, '%2F')
-      .replace(/=/g, '%3D');
+      .replace(/\+/g, "%2B")
+      .replace(/\//g, "%2F")
+      .replace(/=/g, "%3D");
 
     const disconnectUrl = `https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=${process.env.AUTH_NAVER_ID}&client_secret=${process.env.NAUTH_NAVER_SECRET}&access_token=${encodedToken}&service_provider=NAVER`;
 
@@ -86,10 +46,10 @@ export async function POST(request: Request) {
     console.log("Naver disconnect response:", disconnectData);
 
     // 3. 연동 해제 확인
-    const verifyResponse = await fetch('https://openapi.naver.com/v1/nid/me', {
+    const verifyResponse = await fetch("https://openapi.naver.com/v1/nid/me", {
       headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
 
     if (verifyResponse.ok) {
@@ -100,11 +60,10 @@ export async function POST(request: Request) {
 
     return new Response(JSON.stringify(disconnectData), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("Error in naver-disconnect:", error);
-    return new Response('Internal Server Error', { status: 500 });
+    return new Response("Internal Server Error", { status: 500 });
   }
 }

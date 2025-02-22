@@ -1,32 +1,3 @@
-// 'use client'
-//
-// import {
-//   NavigationMenu,
-//   NavigationMenuItem,
-//   NavigationMenuLink,
-//   NavigationMenuList, navigationMenuTriggerStyle
-// } from "@/components/ui/navigation-menu";
-// import Link from "next/link";
-// import { auth } from "@/app/lib/auth";
-//
-// export default async function NavLogin() {
-//   const session = await auth();
-//
-//
-//   return <>
-//     <NavigationMenu>
-//       <NavigationMenuList>
-//         <NavigationMenuItem>
-//           <Link href="/login" legacyBehavior passHref>
-//             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-//               {session ? 'Logout' : 'Login'}
-//             </NavigationMenuLink>
-//           </Link>
-//         </NavigationMenuItem>
-//       </NavigationMenuList>
-//     </NavigationMenu>
-//   </>
-// }
 "use client";
 
 import {

@@ -9,12 +9,10 @@ interface SessionUser {
   image?: string | null;
   provider?: string;
 }
-// Todo 타입 이렇게 지정하는게 맞나?
 
 export async function handleGlobalLogout() {
   const session = await auth();
   const user = session?.user as SessionUser;
-  console.log(user);
   if (user?.provider === "naver") {
     try {
       // 1. 토큰 삭제 요청 / 만료 요청.
@@ -32,7 +30,6 @@ export async function handleGlobalLogout() {
     }
   }
 
-  // 일반 로그아웃
   await signOut();
   redirect("/");
 }
